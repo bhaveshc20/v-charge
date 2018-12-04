@@ -3,17 +3,55 @@ import { StyleSheet, Text, View, Platform, Alert, Dimensions } from 'react-nativ
 
 import MapView from 'react-native-maps';
 
+import { Constants, Location, Permissions } from 'expo';
+
+let { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+
 export default class Home extends React.Component {
   state = {
     stations: null,
+    errorMessage: null,
+    region: {}
   };
 
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    const body = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    }
+    this.setState({
+      region: body,
+    });
+  };
+
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
   componentDidMount() {
-    console.log(this.fetchPlaces())
+    this.fetchPlaces();
   }
 
   async fetchPlaces() {
-
     try {
       let response = await fetch(`https://api.voltaapi.com/v1/stations`, {
         method: 'GET',
@@ -47,8 +85,26 @@ export default class Home extends React.Component {
 
   render() {
     return (
+      this.state.stations ?
+        <MapView
+          region={this.state.region}
+          style={styles.container}
+        >
+          {this.state.stations.map((marker, index) => {
+            const coordinatesMap = marker.location.coordinates
+            const coordobj = {
+              latitude: coordinatesMap[1],
+              longitude: coordinatesMap[0]
+            }
+            return (
+              <MapView.Marker key={index}  coordinate={coordobj}>
+              </MapView.Marker>
+            );
+          })}
+        </MapView>
+        : 
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+        <Text>Wait!!!!</Text>
       </View>
     );
   }
