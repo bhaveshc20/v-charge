@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, Platform, Alert, Dimensions, TouchableOpacity }
 
 import MapView from 'react-native-maps';
 import { Constants, Location, Permissions, LinearGradient } from 'expo';
-import { Icon } from 'react-native-elements'
+import {Icon} from 'react-native-elements';
+import { MaterialIcons, Feather, Entypo, FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
+import * as Animatable from 'react-native-animatable';
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -18,7 +20,12 @@ export default class Home extends React.Component {
     stations: null,
     statInfo: {},
     isOpen: false,
-    region: {},
+    region: {
+      latitude: null || 37.7683336666667,
+      longitude: null || -122.401718333333,
+      latitudeDelta: null || LATITUDE_DELTA,
+      longitudeDelta: null || LONGITUDE_DELTA,
+    },
     coords: {},
   };
 
@@ -49,15 +56,13 @@ export default class Home extends React.Component {
     } else {
       this._getLocationAsync();
     }
-  }
-
-  componentDidMount() {
     this.fetchPlaces();
   }
 
 
+
   fetchPlaces() {
-    axios.get(`https://api.voltaapi.com/v1/stations`)
+    axios.get(`https://api.voltaapi.com/v1/sites-metrics`)
       .then(res => {
         const stations = res.data;
         this.setState({ stations: stations });
@@ -67,7 +72,7 @@ export default class Home extends React.Component {
   _renderCard() {
     const { statInfo } = this.state
     return (
-      <View style={styles.cardView}>
+      <Animatable.View animation="slideInUp" style={styles.cardView}>
         <View style={styles.card}>
           <Text style={styles.cardName}>{statInfo.name}</Text>
         </View>
@@ -78,42 +83,52 @@ export default class Home extends React.Component {
             color='#fff'
             size={30} />
         </LinearGradient>
-      </View>
+      </Animatable.View>
+    )
+  }
+
+  _renderCoords() {
+    return (
+      this.state.stations.map((marker, index) => {
+        const coordinatesMap = marker.location.coordinates
+        const coordobj = {
+          latitude: coordinatesMap[1],
+          longitude: coordinatesMap[0]
+        }
+        return (
+          <MapView.Marker key={index} onPress={() => {
+            this.setState({
+              isOpen: true,
+              statInfo: marker,
+              coords: coordobj,
+            })
+          }} image={require('./assets/flash-marker.png')} coordinate={coordobj}>
+          </MapView.Marker>
+        );
+      })
     )
   }
 
 
-
   render() {
     return (
-      this.state.stations ?
         <View style={styles.container}>
           <MapView
-            region={this.state.region}
+            showsUserLocation={true}
+            showsMyLocationButton={true}
+            initialRegion={this.state.region}
             style={styles.container}
           >
-            {this.state.stations.map((marker, index) => {
-              const coordinatesMap = marker.location.coordinates
-              const coordobj = {
-                latitude: coordinatesMap[1],
-                longitude: coordinatesMap[0]
-              }
-              return (
-                <MapView.Marker key={index} onPress={() => {
-                  this.setState({
-                    isOpen: true,
-                    statInfo: marker,
-                    coords: coordobj,
-                  })
-                }} image={require('./assets/flash-marker.png')} coordinate={coordobj}>
-                </MapView.Marker>
-              );
-            })}
+            {this.state.stations? this._renderCoords() : null}
           </MapView>
           {this.state.isOpen ? this._renderCard() : null}
-        </View>
-        : <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text>WAITT!!!!!</Text>
+        <TouchableOpacity onPress={() => this._getLocationAsync()} style={styles.locationBtn}>
+          <MaterialIcons
+            name="my-location"
+            size={Platform.OS === 'ios' ? 20 : 21}
+            color="#434343"
+          />
+        </TouchableOpacity>
         </View>
     );
   }
@@ -167,34 +182,21 @@ const styles = StyleSheet.create({
     color: '#434343',
     marginBottom: 5,
   },
-  cardAddr: {
-    fontSize: 15,
-    color: '#C6C6C6',
-    marginBottom: 15,
-    marginRight: 35,
-  },
-  cardStatus: {
-    fontSize: 15,
-    color: '#4CD3D9'
-  },
-  markerWrap: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  marker: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "rgba(130,4,150, 0.9)",
-  },
-  ring: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "rgba(130,4,150, 0.3)",
-    position: "absolute",
-    borderWidth: 1,
-    borderColor: "rgba(130,4,150, 0.5)",
+  locationBtn: {
+    position: 'absolute',
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    right: 10,
+    top: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
   },
 });
 
