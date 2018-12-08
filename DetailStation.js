@@ -75,14 +75,14 @@ export default class DetailStation extends React.Component {
         </View>
         <View style={styles.detailView}>
           <Text style={styles.headerText}>{statInfo.name}</Text>
-          <Swiper containerStyle={styles.swiperView}>
+          <Swiper containerStyle={styles.swiperView} activeDotColor="#4CD3D9" loop={false} >
             <View style={styles.stationView}>
               <Text style={styles.swiperInHeader}>Stations</Text>
               {statInfo.stations.map((station, index) => {
                 return (
                   <View key={index}>
-                    <Text style={{ color: '#434343', fontSize: 20, fontWeight: '500' }}>{station.name}</Text>
-                    <Text style={{ color: '#B9B9B9' }}>{station.status}</Text>
+                    <Text style={{ color: '#434343', fontSize: 20, fontWeight: '500', fontFamily:'product-sans-regular' }}>{station.name}</Text>
+                    <Text style={{ color: '#B9B9B9', fontFamily: 'product-sans-regular' }}>{station.status}</Text>
                     <Divider style={{ marginTop: 10, marginBottom: 10, height: 0.5, backgroundColor: '#C6C6C6' }} />
                   </View>
                 )
@@ -95,14 +95,14 @@ export default class DetailStation extends React.Component {
                 return (
                   <View key={index} style={styles.progressView}>
                     <Progress.Bar color={'#4CD3D9'} width={300} progress={prog} height={14} borderRadius={7} style={{marginBottom:10}} />
-                    <Text style={{ color: '#434343', marginBottom: 25 }}>{charger.available} OF {charger.total} - {charger.level}</Text>
+                    <Text style={{ color: '#434343', marginBottom: 25, fontFamily: 'product-sans-regular' }}>{charger.available} OF {charger.total} AVAILABLE - {charger.level}</Text>
                   </View>
                 )
               })}
             </View>
           </Swiper>
           <LinearGradient colors={['#55D0B4', '#51D0C4', '#4CD3D9']} style={styles.cardBtn}>
-            <Text style={{fontSize: 30, fontWeight: '700', color: "#fff"}}>GO</Text>
+            <Text style={{ fontSize: 30, fontWeight: '700', color: "#fff", fontFamily: 'product-sans-bold'}}>GO</Text>
           </LinearGradient>
         </View>
       </ScrollView>
@@ -147,6 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   headerText: {
+    fontFamily:'product-sans-bold',
     fontSize: 40,
     fontWeight: '700',
     marginRight: 70
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   swiperInHeader: {
+    fontFamily: 'product-sans-bold',
     fontSize: 25,
     color: '#434343',
     marginBottom: 30,

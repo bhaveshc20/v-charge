@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     height:CARD_HEIGHT,
   },
   cardName: {
+    fontFamily: 'product-sans-regular',
     fontSize: 20,
     fontWeight: '700',
     color: '#434343',
