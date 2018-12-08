@@ -78,11 +78,28 @@ export default class DetailStation extends React.Component {
           <Swiper containerStyle={styles.swiperView}>
             <View style={styles.stationView}>
               <Text style={styles.swiperInHeader}>Stations</Text>
+              {statInfo.stations.map((station, index) => {
+                return (
+                  <View key={index}>
+                    <Text style={{ color: '#434343', fontSize: 20, fontWeight: '500' }}>{station.name}</Text>
+                    <Text style={{ color: '#B9B9B9' }}>{station.status}</Text>
+                    <Divider style={{ marginTop: 10, marginBottom: 10, height: 0.5, backgroundColor: '#C6C6C6' }} />
+                  </View>
+                )
+              })}
             </View>
             <View style={styles.chargerView}>
               <Text style={styles.swiperInHeader}>Chargers</Text>
+              {statInfo.chargers.map((charger, index) => {
+                const prog = (charger.available / charger.total)
+                return (
+                  <View key={index} style={styles.progressView}>
+                    <Progress.Bar color={'#4CD3D9'} width={300} progress={prog} height={14} borderRadius={7} style={{marginBottom:10}} />
+                    <Text style={{ color: '#434343', marginBottom: 25 }}>{charger.available} OF {charger.total} - {charger.level}</Text>
+                  </View>
+                )
+              })}
             </View>
-            
           </Swiper>
           <LinearGradient colors={['#55D0B4', '#51D0C4', '#4CD3D9']} style={styles.cardBtn}>
             <Text style={{fontSize: 30, fontWeight: '700', color: "#fff"}}>GO</Text>
@@ -104,32 +121,35 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   swiperView: {
-    overflow: 'hidden',
     backgroundColor: '#fff',
     justifyContent: 'center',
-    height: height/2,
-    marginTop: 20,
+    height: height/2.5,
+    marginVertical: 20,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 1,
   },
   stationView: {
     padding: 20,
     flex:1,
-    backgroundColor:'grey'
+    // backgroundColor:'hotpink'
   },
   chargerView: {
     flex: 1,
     padding: 20,
-    backgroundColor: 'orange'
+    // backgroundColor: 'orange'
+  },
+  progressView: {
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   headerText: {
     fontSize: 40,
     fontWeight: '700',
-    marginRight: 50
+    marginRight: 70
   },
   closeBtn: {
     position: 'absolute',
@@ -164,6 +184,7 @@ const styles = StyleSheet.create({
   },
   swiperInHeader: {
     fontSize: 25,
-    color: '#434343'
+    color: '#434343',
+    marginBottom: 30,
   }
 });
