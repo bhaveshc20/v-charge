@@ -8,8 +8,7 @@ import * as Progress from 'react-native-progress';
 
 import MapViewDirections from 'react-native-maps-directions';
 
-
-// import Swiper from 'react-native-swiper';
+import Swiper from 'react-native-swiper';
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -43,9 +42,9 @@ export default class DetailStation extends React.Component {
 
     const origin = { latitude: region.latitude , longitude: region.longitude };
     const destination = { latitude: coordobj.latitude, longitude: coordobj.longitude };
-    const GOOGLE_MAPS_APIKEY = '';
+    const GOOGLE_MAPS_APIKEY = 'AIzaSyCgDFkATazSiKPqTPCMx09YMZ8wft1KzOo';
     return (
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, flexDirection:'column' }}>
         <View style={styles.mapView}>
           <MapView 
           showsUserLocation={true} 
@@ -55,7 +54,7 @@ export default class DetailStation extends React.Component {
               edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
               animated: true,
             })}
-          style={{ flex: 1 }}>
+            style={{flex:1}}>
             <MapViewDirections
               origin={origin}
               destination={destination}
@@ -71,8 +70,23 @@ export default class DetailStation extends React.Component {
               name='close'
               color='red'
               size={Platform.OS === 'ios' ? 20 : 21}
-              />
-          </TouchableOpacity>
+            />
+          </TouchableOpacity> 
+        </View>
+        <View style={styles.detailView}>
+          <Text style={styles.headerText}>{statInfo.name}</Text>
+          <Swiper containerStyle={styles.swiperView}>
+            <View style={styles.stationView}>
+              <Text style={styles.swiperInHeader}>Stations</Text>
+            </View>
+            <View style={styles.chargerView}>
+              <Text style={styles.swiperInHeader}>Chargers</Text>
+            </View>
+            
+          </Swiper>
+          <LinearGradient colors={['#55D0B4', '#51D0C4', '#4CD3D9']} style={styles.cardBtn}>
+            <Text style={{fontSize: 30, fontWeight: '700', color: "#fff"}}>GO</Text>
+          </LinearGradient>
         </View>
       </ScrollView>
     )
@@ -82,7 +96,40 @@ export default class DetailStation extends React.Component {
 
 const styles = StyleSheet.create({
   mapView: {
-    height: height - 350,
+    flex:1, 
+    height: height/2
+  },
+  detailView: {
+    flex:1,
+    padding: 20,
+  },
+  swiperView: {
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    height: height/2,
+    marginTop: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  stationView: {
+    padding: 20,
+    flex:1,
+    backgroundColor:'grey'
+  },
+  chargerView: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: 'orange'
+  },
+  headerText: {
+    fontSize: 40,
+    fontWeight: '700',
+    marginRight: 50
   },
   closeBtn: {
     position: 'absolute',
@@ -100,4 +147,23 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
+  cardBtn: {
+    position:"absolute",
+    right: 20,
+    top: -20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 70,
+    height: 60,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  swiperInHeader: {
+    fontSize: 25,
+    color: '#434343'
+  }
 });
