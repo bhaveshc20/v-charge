@@ -13,7 +13,7 @@ const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const CARD_HEIGHT = height / 12;
+const CARD_HEIGHT = height / 14;
 
 export default class Home extends React.Component {
   state = {
@@ -72,17 +72,21 @@ export default class Home extends React.Component {
   _renderCard() {
     const { statInfo } = this.state
     return (
-      <Animatable.View animation="slideInUp" style={styles.cardView}>
-        <View style={styles.card}>
+      <Animatable.View animation="slideInUp">
+      <TouchableOpacity onPress={() => {
+        { this.props.navigation.navigate('DetailScreen', { statInfo: statInfo, coordobj: this.state.coords, region: this.state.region }) }
+      }} style={styles.cardView}>
+      {/* <Animatable.View animation="slideInUp"> */}
           <Text style={styles.cardName}>{statInfo.name}</Text>
-        </View>
         <LinearGradient colors={['#55D0B4', '#51D0C4', '#4CD3D9']} style={styles.cardBtn}>
           <Icon
-            name='plus'
-            type='feather'
+            name='directions'
+            type='FontAwesome5'
             color='#fff'
-            size={30} />
+            size={40} />
         </LinearGradient>
+      {/* </Animatable.View> */}
+      </TouchableOpacity>
       </Animatable.View>
     )
   }
@@ -140,47 +144,37 @@ const styles = StyleSheet.create({
   },
   cardView: {
     position: "absolute",
+    flexDirection:'row',
     bottom: 30,
     left: 0,
     right: 0,
-    padding: 20,
+    marginHorizontal: 20,
+    flex: 1,
+    backgroundColor: '#FFF',
+    alignItems: 'center',
+    justifyContent:'space-between',
+    flexDirection: 'row', 
+    height: CARD_HEIGHT,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1,
+    borderRadius: 10,
+
   },
   cardBtn: {
-    position: "absolute",
-    bottom: 80,
-    height: 50,
-    width: 50,
-    left: width - 95,
-    right: 0,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    justifyContent: 'center',
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  card: {
-    backgroundColor: "#FFF",
-    height: CARD_HEIGHT,
-    width: '100%',
-    justifyContent: 'center',
-    overflow: "hidden",
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-    padding: 20
+    alignItems:'center',
+    justifyContent:'center',
+    width: 65,
+    height:CARD_HEIGHT,
   },
   cardName: {
     fontSize: 20,
     fontWeight: '700',
     color: '#434343',
-    marginBottom: 5,
+    marginLeft: 20,
   },
   locationBtn: {
     position: 'absolute',
