@@ -1,6 +1,6 @@
 <p align="center">
-<a href="https://github.com/bhaveshc789/charge-v/">
-<img alt="daug" src="https://github.com/bhaveshc789/charge-v/blob/master/assets/github-icon.png" width="250">
+<a href="https://github.com/bhaveshc789/v-charge/">
+<img alt="daug" src="https://github.com/bhaveshc789/v-charge/blob/master/assets/github-icon.png" width="250">
 </a>
 </p>
 
@@ -29,9 +29,9 @@ Find Volta Charging stations near you.
 ### [Try it on Expo](https://expo.io/@bhaveshc789/charge-v)
 
 ```
-git clone https://github.com/bhaveshc789/charge-v.git
+git clone https://github.com/bhaveshc789/v-charge.git
 
-cd charge-v
+cd v-charge
 
 npm install
 
