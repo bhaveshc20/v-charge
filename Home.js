@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, Alert, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Platform, Animated, Alert, Dimensions, TouchableOpacity } from 'react-native';
 
 import MapView from 'react-native-maps';
 import { Constants, Location, Permissions, LinearGradient } from 'expo';
@@ -71,12 +71,11 @@ export default class Home extends React.Component {
 
   _renderCard() {
     const { statInfo } = this.state
+    const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
     return (
-      <Animatable.View animation="slideInUp">
-      <TouchableOpacity onPress={() => {
+      <AnimatedTouchable onPress={() => {
         { this.props.navigation.navigate('DetailScreen', { statInfo: statInfo, coordobj: this.state.coords, region: this.state.region }) }
-      }} style={styles.cardView}>
-      {/* <Animatable.View animation="slideInUp"> */}
+      }} animation="slideInUp" style={styles.cardView}>
           <Text style={styles.cardName}>{statInfo.name}</Text>
         <LinearGradient colors={['#55D0B4', '#51D0C4', '#4CD3D9']} style={styles.cardBtn}>
           <Icon
@@ -85,9 +84,7 @@ export default class Home extends React.Component {
             color='#fff'
             size={40} />
         </LinearGradient>
-      {/* </Animatable.View> */}
-      </TouchableOpacity>
-      </Animatable.View>
+      </AnimatedTouchable>
     )
   }
 
@@ -120,6 +117,7 @@ export default class Home extends React.Component {
           <MapView
             showsUserLocation={true}
             showsMyLocationButton={true}
+            followsUserLocation={true}
             initialRegion={this.state.region}
             style={styles.container}
           >

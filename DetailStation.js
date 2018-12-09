@@ -42,7 +42,7 @@ export default class DetailStation extends React.Component {
 
     const origin = { latitude: region.latitude , longitude: region.longitude };
     const destination = { latitude: coordobj.latitude, longitude: coordobj.longitude };
-    const GOOGLE_MAPS_APIKEY = 'AIzaSyCgDFkATazSiKPqTPCMx09YMZ8wft1KzOo';
+    const GOOGLE_MAPS_APIKEY = '';
     return (
       <ScrollView style={{ flex: 1, flexDirection:'column' }}>
         <View style={styles.mapView}>
