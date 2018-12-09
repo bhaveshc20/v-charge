@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, Animated, Alert, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Platform, Dimensions, TouchableOpacity } from 'react-native';
 
 import MapView from 'react-native-maps';
 import { Constants, Location, Permissions, LinearGradient } from 'expo';
 import {Icon} from 'react-native-elements';
-import { MaterialIcons, Feather, Entypo, FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import * as Animatable from 'react-native-animatable';
-
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
@@ -15,11 +14,13 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const CARD_HEIGHT = height / 14;
 
+
 export default class Home extends React.Component {
   state = {
     stations: null,
     statInfo: {},
     isOpen: false,
+    errorMessage: null,
     region: {
       latitude: null || 37.7683336666667,
       longitude: null || -122.401718333333,
@@ -30,22 +31,25 @@ export default class Home extends React.Component {
   };
 
   _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
+    try {
+      let { status } = await Permissions.askAsync(Permissions.LOCATION);
+      if (status !== 'granted') {
+        this.setState({
+          errorMessage: 'Permission to access location was denied',
+        });
+      }
+      let location = await Location.getCurrentPositionAsync({});
+      const body = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      }
+      this.setState({region: body})
+      this.animateToLocation(body);
+    } catch (error) {
+      console.log(error);
     }
-    let location = await Location.getCurrentPositionAsync({});
-    const body = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    }
-    this.setState({
-      region: body,
-    });
   };
 
   componentWillMount() {
@@ -59,14 +63,16 @@ export default class Home extends React.Component {
     this.fetchPlaces();
   }
 
-
-
   fetchPlaces() {
-    axios.get(`https://api.voltaapi.com/v1/sites-metrics`)
-      .then(res => {
-        const stations = res.data;
-        this.setState({ stations: stations });
-      })
+    try{
+      axios.get(`https://api.voltaapi.com/v1/sites-metrics`)
+        .then(res => {
+          const stations = res.data;
+          this.setState({ stations: stations });
+        })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   _renderCard() {
@@ -110,15 +116,32 @@ export default class Home extends React.Component {
     )
   }
 
+  onMapReady = () => {
+    if (!this.state.ready) {
+      this.setState({ ready: true });
+    }
+  };
+
+  animateToLocation(region){
+    if(this.state.ready){
+      setTimeout(
+        () => this.map.animateToRegion(region, 500), 5
+        );
+    }
+  }
+
 
   render() {
+    const {region} = this.state.region
     return (
         <View style={styles.container}>
           <MapView
+            ref={ref => { this.map = ref; }}  
+            initialRegion={region}
             showsUserLocation={true}
             showsMyLocationButton={true}
-            // followsUserLocation={true}
-            initialRegion={this.state.region}
+            onMapReady={this.onMapReady}
+            maxZoom={16}
             style={styles.container}
           >
             {this.state.stations? this._renderCoords() : null}

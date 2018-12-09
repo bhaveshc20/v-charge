@@ -56,6 +56,7 @@ npm start
 - [x] Publish the app and polish README with screenshots/gif of the app
 
 ## Demo
+![Demo gif](https://github.com/bhaveshc789/v-charge/blob/master/screenshots/final.gif)
 
 ## Feedback
 

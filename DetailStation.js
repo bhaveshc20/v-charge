@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Platform, Animated, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
-import { Header, Icon, Button, Divider } from 'react-native-elements';
+import { StyleSheet, Text, View, Platform, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { Icon, Divider } from 'react-native-elements';
 import MapView from 'react-native-maps';
-// import openMap from 'react-native-open-maps';
+
 import { LinearGradient } from 'expo';
 import * as Progress from 'react-native-progress';
 
