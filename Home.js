@@ -71,7 +71,7 @@ export default class Home extends React.Component {
 
   _renderCard() {
     const { statInfo } = this.state
-    const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+    const AnimatedTouchable = Animatable.createAnimatableComponent(TouchableOpacity);
     return (
       <AnimatedTouchable onPress={() => {
         { this.props.navigation.navigate('DetailScreen', { statInfo: statInfo, coordobj: this.state.coords, region: this.state.region }) }
@@ -117,7 +117,7 @@ export default class Home extends React.Component {
           <MapView
             showsUserLocation={true}
             showsMyLocationButton={true}
-            followsUserLocation={true}
+            // followsUserLocation={true}
             initialRegion={this.state.region}
             style={styles.container}
           >
