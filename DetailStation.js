@@ -107,7 +107,7 @@ export default class DetailStation extends React.Component {
         <View style={styles.detailView}>
           <Text style={styles.headerText}>{statInfo.name}</Text>
           {this._renderSwiper()}
-          <TouchableOpacity onPress={() => openMap({ travelType: ['drive'], end:`${regionObj.latitude}, ${regionObj.longitude}`})} style={styles.cardBtn}>
+          <TouchableOpacity onPress={() => openMap({ travelType: ['drive'], end:`${regionObj.latitude}, ${regionObj.longitude}`})} style={styles.cardBtnView}>
             <LinearGradient colors={['#55D0B4', '#51D0C4', '#4CD3D9']} style={styles.cardBtn}>
             <Text style={{ fontSize: 30, fontWeight: '700', color: "#fff", fontFamily: 'product-sans-bold'}}>GO</Text>
           </LinearGradient>
@@ -143,12 +143,10 @@ const styles = StyleSheet.create({
   stationView: {
     padding: 20,
     flex:1,
-    // backgroundColor:'hotpink'
   },
   chargerView: {
     flex: 1,
     padding: 20,
-    // backgroundColor: 'orange'
   },
   progressView: {
     alignItems: 'center',
@@ -176,13 +174,10 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-  cardBtn: {
+  cardBtnView: {
     position:"absolute",
     right: 20,
     top: -20,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
     width: 70,
     height: 60,
     shadowColor: '#000',
@@ -190,6 +185,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 1,
+  },
+  cardBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    flex:1,
+    width: 70,
   },
   swiperInHeader: {
     fontFamily: 'product-sans-bold',
